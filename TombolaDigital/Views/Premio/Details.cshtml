@@ -1,0 +1,26 @@
+﻿@model TombolaDigital.Models.PremioModels
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PremioModels</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.nombrePremio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nombrePremio)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.premioID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

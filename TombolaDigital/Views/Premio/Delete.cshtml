@@ -1,0 +1,32 @@
+﻿@model TombolaDigital.Models.PremioModels
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Eliminar</h4>
+</div>
+
+<div class="modal-body">
+    <h3>¿Está seguro que desea eliminar este participante?</h3>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                Premio
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.nombrePremio)
+            </dd>
+
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Eliminar</button>
+    </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,65 @@
+﻿@model IEnumerable<TombolaDigital.Models.ParticipanteModels>
+
+<h2>Participantes</h2><br>
+
+
+<p>
+    <a class="btn btn-primary btn-lg" href='@Url.Action("Create")' data-toggle="modal" data-target="#MenuModal"> Nuevo Participante </a>
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            Cédula
+        </th>
+        <th>
+            Nombre
+        </th>
+        <th>
+            Ubicación
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.cedula)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.nombreParticipante)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ubicacion.nombreUbicacion)
+        </td>
+       
+        <td>
+            <a class="btn btn-info" href="@Url.Action("Edit", new { id = item.participanteID })" data-toggle="modal" data-target="#MenuModal">Editar</a>
+            @*<a class="btn btn-info" href="@Url.Action("Details", new { id = item.participanteID })" data-toggle="modal" data-target="#MenuModal">Detalles</a>*@
+            <a class="btn btn-info" href="@Url.Action("Delete", new { id = item.participanteID })" data-toggle="modal" data-target="#MenuModal">Eliminar</a>
+        </td>
+    </tr>
+}
+
+</table>
+
+
+<!-- MenuModal -->
+<div class="modal fade " id="MenuModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<!-- /.modal -->
+@section Scripts {
+    <script>
+
+
+    $('#MenuModal').on('hidden.bs.modal', function () {
+        $(this).removeData('bs.modal').find(".modal-content").html('');
+    });
+
+    </script>
+
+}

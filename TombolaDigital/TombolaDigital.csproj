@@ -202,6 +202,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Images\389-gold-1366x768-minimalistic-wallpaper.jpg" />
     <Content Include="Images\arbol_rojo.jpg" />
+    <Content Include="Images\Christmas_bckgr_012.jpg" />
     <Content Include="Images\Fondo de Tombola.jpg" />
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />

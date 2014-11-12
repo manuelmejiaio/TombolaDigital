@@ -1,56 +1,59 @@
 ﻿
-<html ng-app="TombolaDigital">
-<body ng-controller="MyController" id="background">
-
-    <div id="background_2" style="right:2px; width:35%; height:94%; background-color:black;position:absolute "></div>
-
-    
-    <table border="1" style="position:absolute; right:50px; width:30%">
-
-        <thead>
-            <tr>
-                <td style="width:500px;font-size:25px; text-align:center"><b>Listado de Ganadores</b></td>
-            </tr>
-        </thead>
+<div ng-app="TombolaDigital">
+    <div ng-controller="MyController">
 
 
-        <tbody>           
-            <tr>
-                <td style="width:300px"><h4><b>&nbsp;&nbsp;Ganador</b></h4></td>
-                <td style="width:300px"><h4><b>&nbsp;&nbsp;Cédula</b></h4></td>
-                <td style="width:200px"><h4><b>&nbsp;&nbsp;Premio</b></h4></td>
-            </tr>
+        @*-----------------------------------------------------------------------Tabla*@
+        <table border="1" style="border:3px solid black; position:absolute; right:50px; width:30%; background-image: url('../../Images/389-gold-1366x768-minimalistic-wallpaper.jpg');">
+            <thead>
+                <tr>
+                    <td style="width:500px;font-size:25px; text-align:center"><b>Listado de Ganadores</b></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="width:300px"><h4><b>&nbsp;&nbsp;Ganador</b></h4></td>
+                    <td style="width:300px"><h4><b>&nbsp;&nbsp;Cédula</b></h4></td>
+                    <td style="width:200px"><h4><b>&nbsp;&nbsp;Premio</b></h4></td>
+                    @*<td style="width:200px"><h4><b>&nbsp;&nbsp;Ubicacion</b></h4></td>*@
+                </tr>
 
-            <tr style="overflow:scroll; height:30px;" ng-repeat="x in ng_arregloForzado | orderBy:'id':true">
-                <td style="width:300px"> 
-                    <p>&nbsp; {{x.nombre}}</p>
-                    <p>&nbsp; {{x.apellido}}</p>
-                
-                </td>
-                <td style="width:300px"> &nbsp; {{x.cedula}} </td>
-                <td style="width:200px"> &nbsp;{{x.premio}}</td>
-            </tr>
-        </tbody>
-    </table>
+                <tr style="overflow:scroll; height:30px;" ng-repeat="x in ng_arregloForzado | orderBy:'id':true">
+                    <td style="width:300px;">
+                        @*<p>&nbsp; {{x.ubicacion}}</p>*@
+                        <p>&nbsp; {{x.nombre}}</p>
+                        
 
+                    </td>
+                    <td style="width:300px"> &nbsp; {{x.cedula}} </td>
+                    <td style="width:200px"> &nbsp;{{x.premio}}</td>
+                    @*<td style="width:200px"> &nbsp;{{x.ubicacion}}</td>*@
+                </tr>
+            </tbody>
+        </table>
 
-    <div style="position:absolute; background-color:black; height:94%; width:5px; right:35% "> </div>
+        @*-----------------------------------------------------------------------Tombolola*@
+        <div style=" background-color:white;  position: fixed;top: 45%;left: 22%; height:170px;width:540px; border:2px solid black;border-radius:2em; text-align:center">
+            <p style=" position:absolute;font-family:'Lucida Calligraphy' ; font-size:65px;color:#d4d022; text-shadow: -1px 0 black, 0 2px black, 2px 0 black, 0 -1px black; bottom:125%; width:525px "> Rifa Navideña</p>
+            
+            @*para mostrar el premio en la tombola*@
+            <div style="top:-55px; left:55px; position: absolute; height:52px; width:430px; background:white; border: 3px solid black ;border-radius:2em 2em 0em 0em;">
+                <p style="font-size:32px;"> {{ng_PremioRodando}} </p>
+            </div>
 
-    <div  style=" background-color:white;  position: fixed;top: 40%;left: 18%; height:170px;width:495px; border:2px solid black;border-radius:2em; text-align:center">
-        <p style=" position:absolute; font-size:70px;color:#d4d022; text-shadow: -1px 0 black, 0 2px black, 2px 0 black, 0 -1px black; bottom:100%; width:500px "> Rifa Navideña</p>
-        <div id="div1">
-            <h1 style="font-size:25px;"> {{ng_ParticipantesNombreRodando}} {{ng_ParticipantesApellidoRodando}}</h1>
-            <h2 style="font-size:50px;"> {{ng_ParticipantesCedulaRodando}}</h2>
+            <div id="div1">
+                <h1 style="font-size:25px;"> {{ng_ParticipantesNombreRodando}} </h1>
+                <h2 style="font-size:50px;"> {{ng_ParticipantesCedulaRodando}}</h2>
+            </div>
+            <div style="top:180px; left:110px; position: absolute">
+                <a class="btn btn-warning" ng-click='RodarTombola()'><h4>Rodar Tombola</h4></a>
+                <a class="btn btn-warning" ng-click='ReiniciarPremio()'><h4>Reiniciar Premio</h4></a>
+            </div>
         </div>
-        <div style="top:180px; left:82px; position: absolute">
-            <a class="btn btn-warning" ng-click='RodarTombola()'><h4>Rodar Tombola</h4></a>
-            <a class="btn btn-warning" ng-click='ReiniciarPremio()'><h4>Reiniciar Premio</h4></a>
-        </div>
-    </div>    
 
-               
-</body>
-</html>
+
+    </div>
+</div>
 
 
 @section Scripts {
@@ -58,194 +61,226 @@
 
     <script>
 
-        
+
         angular.module('TombolaDigital', [])
         .controller('MyController', ['$scope', function($scope) {
+
+
+
+            //variables que contienen objetos viewbag
+            var participantes = @Html.Raw(Json.Encode(@ViewBag.Participantes));
+            var premios = @Html.Raw(Json.Encode(@ViewBag.Premios));
+
+
+            // variables de arreglos
+            var ganadores = [];
+            var premiosGanados= [];
+            var personasAusentes = [];
+
+            //variables auxiliares
+            var x;
+            var aux = 0;
+            var help = 0;
+
+            //variables para angularJS
+            $scope.ng_arregloForzado = [];
+            $scope.ng_ParticipantesNombreRodando;
+            $scope.ng_ParticipantesCedulaRodando;
+            $scope.ng_PremioRodando;
+
+            //variables de conteo de ganadores por ubicacion
+            var minapreCont = 0;
+            var mipreCont = 0;
+            var barquitaCont = 0;
             
+            //variables para calcular la cantidad de participante por area
+            //var participanteMapre = 0;
+            //var participanteMipre = 0;
+            //var participanteBarquita = 0;
+
+
+            //conteo de participantes por area
+            //for( var x = 0 ; x < participantes.length; x++)
+            //{
+            //    if( participantes[x].ubicacionID == 1)
+            //    {
+            //        participanteMapre ++;
+            //    }
+
+            //    if( participantes[x].ubicacionID == 2)
+            //    {
+            //        participanteMipre ++;
+            //    }
+
+            //    if( participantes[x].ubicacionID == 3)
+            //    {
+            //        participanteBarquita ++;
+            //    }
+            //}
+
+            //variable cantidad maxima de premios por ubicacion
+            var barquitaMaxPremios = 10;   //Math.floor(participanteBarquita * 0.1);
+            var mipreMaxPremios = 30;      //Math.floor(participanteMipre * 0.2);
+            var minapreMaxPremios = 110;   //premios.length - (mipreMaxPremios + barquitaMaxPremios); 
+
+            //Si la cantidad de premios de Minapre es menor del 70% del total de premios, fija los valores.
+            if(minapreMaxPremios < Math.floor(premios.length * 0.7))
+            {
+                minapreMax = Math.floor(premios.length * 0.7);
+                mipreMax = Math.floor(premios.length * 0.2); 
+                barquitaMax = Math.floor(premios.length * 0.1); 
+            }
             
 
-        //variables que contienen objetos viewbag    
-        var participantes = @Html.Raw(Json.Encode(@ViewBag.Participantes));
-        var premios = @Html.Raw(Json.Encode(@ViewBag.Premios));
-           
-
-        // variables de arreglos
-        var ganadores = [];
-        var premiosGanados= [];
-        var personasAusentes = [];
-
-        //variables auxiliares
-        var x; 
-        var aux = 0;
-        var help = 0;
-
-        //variables para angularJS
-        $scope.ng_arregloForzado = [];
-        $scope.ng_ParticipantesNombreRodando;
-        $scope.ng_ParticipantesApellidoRodando;
-        $scope.ng_ParticipantesCedulaRodando;
-
-        //variables de conteo de ganadores por ubicacion
-        var minapreCont = 0;
-        var mipreCont = 0;
-        var barquitaCont = 0;
-
-        //variable cantidad maxima de premios por ubicacion
-        var minapreMax = Math.floor(premios.length * 0.7);
-        var mipreMax = Math.floor(premios.length * 0.2); 
-        var barquitaMax = Math.floor(premios.length * 0.1); 
-
-
-        // En esta funcion se elige un participante aleatoriamente almacenado en la variables que para luego enviarlo a la funcion Ganador(x)
-        $scope.RodarTombola = function()
-        {
-            if(premiosGanados.length < premios.length)
+            // En esta funcion se elige un participante aleatoriamente almacenado en la variables que para luego enviarlo a la funcion Ganador(x)
+            $scope.RodarTombola = function()
             {
-
-                var participantesAleatorios = setInterval(function () {
-                    x = Math.floor((Math.random() * participantes.length) + 0);
-                    $scope.ng_ParticipantesNombreRodando =  participantes[x].nombreParticipante;
-                    $scope.ng_ParticipantesApellidoRodando = participantes[x].apellidoParticipante;
-                    $scope.ng_ParticipantesCedulaRodando = " ("+ participantes[x].cedula + ")";
-                    $scope.$apply();
-                }, 300);
-
-
-                setTimeout(function(){
-                    clearInterval(participantesAleatorios);
-                    Ganador (x);
-                },10000);
-            }
-
-            else{
-                alert("Ya se han rifado todos los premios");
-
-            }
-        }
-
-
-        //En esta funcion se verifica si el participante ya ha ganado, si ha ganado vuelve y llama a RodarTombola() de lo contrario es agregado en el arreglo ganadores
-        function Ganador(x)
-        {
-
-            //------------------------------------Inicio de verificacion
-            for (i = 0; i < participantes.length; i++)
-            {
-                if(  ganadores[i] == participantes[x].cedula || personasAusentes[i] ==  participantes[x].cedula)
+                if(premiosGanados.length < premios.length)
                 {
-                    console.log("Ya ha ganado");
-                    $scope.RodarTombola();
-                    return;
+
+                    var participantesAleatorios = setInterval(function () {
+                        x = Math.floor((Math.random() * participantes.length) + 0);
+                        $scope.ng_ParticipantesNombreRodando =  participantes[x].nombreParticipante;
+                        $scope.ng_ParticipantesCedulaRodando = " ("+ participantes[x].cedula + ")";
+                        $scope.ng_PremioRodando =  premios[aux].nombrePremio;
+                        $scope.$apply();
+                    }, 100); // original 300 milisegundos
+
+
+                    setTimeout(function(){
+                        clearInterval(participantesAleatorios);
+                        Ganador (x);
+                    },200); //original 10 segundos
+                }
+
+                else{
+                    alert("Ya se han rifado todos los premios");
+
                 }
             }
 
-            if(minapreCont == minapreMax && mipreCont == mipreMax && barquitaCont == barquitaMax )
-            {             
-                console.log("MINAPRE se llevara el ultimo premio");
-                minapreCont --;
-            }
 
-            console.log(participantes[x].ubicacionID);
-            switch(participantes[x].ubicacionID) 
+            //En esta funcion se verifica si el participante ya ha ganado, si ha ganado vuelve y llama a RodarTombola() de lo contrario es agregado en el arreglo ganadores
+            function Ganador(x)
             {
-                case 1:
-                    if(minapreCont == minapreMax)
-                    { console.log("MINAPRE Ha ganado el 70% ");
+
+                //------------------------------------Inicio de verificacion
+                for (i = 0; i < participantes.length; i++)
+                {
+                    if(  ganadores[i] == participantes[x].cedula || personasAusentes[i] ==  participantes[x].cedula)
+                    {
+                        console.log("Ya ha ganado");
                         $scope.RodarTombola();
-                        return; 
+                        return;
                     }
-                    break;
-                case 2:
-                    if(mipreCont == mipreMax)
-                    { console.log("MIPRE Ha ganado el 20% ");
-                        $scope.RodarTombola();
-                        return; 
-                    }
-                    break;
-                case 3:
-                    if(barquitaCont == barquitaMax)
-                    { console.log("Barquita Ha ganado el 10% ");
-                        $scope.RodarTombola();
-                        return; 
-                    }
-                    break;
-                
-            }
-            //------------------------------------Fin de verificacion
+                }
 
-            switch(participantes[x].ubicacionID) 
-            {
-                case 1:
-                    minapreCont ++;
-                    break;
-                case 2:
-                    mipreCont ++;
-                    break;
-                case 3:
-                    barquitaCont ++;
-                    break;
-            }
+                //if(minapreCont == minapreMaxPremios && mipreCont == mipreMaxPremios && barquitaCont == barquitaMaxPremios )
+                //{
+                //    console.log("MINAPRE se llevara el ultimo premio");
+                //    minapreCont --;
+                //}
 
-
-            ganadores.push(participantes[x].cedula );
-            premiosGanados.push(premios[aux].nombrePremio)
-           
-            $scope.ng_arregloForzado[aux] = 
-            {
-                id: aux,// id es para organizarlo inversamente en la tabla a mostrarse
-                nombre:  participantes[x].nombreParticipante,
-                apellido: participantes[x].apellidoParticipante,
-                cedula:  "("+ ganadores[aux] + ")",
-                premio: premiosGanados[aux]
-            };
-
-            //------------------------------------inicio de fade
-            var fade = setInterval(function () {
-               
-                $("#div1").fadeOut("fast");
-                $("#div1").fadeIn("slow");
-
-            }, 1000);
-
-            setTimeout(function(){
-                clearInterval(fade);
-                $scope.$apply();
-                aux ++;
-            },10000);
-            //------------------------------------fin de fade
-
-           
-        }
-        
-
-        //Esta funcion busca un nuevo participante, pero con el mismo premio.
-        $scope.ReiniciarPremio = function()
-        {
-            if(ganadores[0] != null)
-            {
-                personasAusentes.push(participantes[x].cedula );
-                
-                switch(participantes[x].ubicacionID) 
+                console.log(participantes[x].ubicacionID);
+                switch(participantes[x].ubicacionID)
                 {
                     case 1:
-                        minapreCont --;
+                        if(minapreCont == minapreMaxPremios)
+                        { console.log("Han ganado 110 participantes de MINAPRE");
+                            $scope.RodarTombola();
+                            return;
+                        }
                         break;
                     case 2:
-                        mipreCont --;
+                        if(mipreCont == mipreMaxPremios)
+                        { console.log("Han ganado 30 participantes de MIPRE");
+                            $scope.RodarTombola();
+                            return;
+                        }
                         break;
                     case 3:
-                        barquitaCont --;
+                        if(barquitaCont == barquitaMaxPremios)
+                        { console.log("Han ganado 10 paraticipantes de Barquita");
+                            $scope.RodarTombola();
+                            return;
+                        }
+                        break;
+
+                }
+                //------------------------------------Fin de verificacion
+                switch(participantes[x].ubicacionID)
+                {
+                    case 1:
+                        minapreCont ++;
+                        break;
+                    case 2:
+                        mipreCont ++;
+                        break;
+                    case 3:
+                        barquitaCont ++;
                         break;
                 }
-                aux --;
-                ganadores.pop();
-                premiosGanados.pop();
-                $scope.RodarTombola();
-            }
-            else{return;}
 
-        }
-        
+
+                ganadores.push(participantes[x].cedula );
+                premiosGanados.push(premios[aux].nombrePremio)
+
+                $scope.ng_arregloForzado[aux] =
+                {
+                    id: aux,// id es para organizarlo inversamente en la tabla a mostrarse
+                    nombre:  participantes[x].nombreParticipante,
+                    ubicacion: participantes[x].ubicacionID,
+                    cedula:  "("+ ganadores[aux] + ")",
+                    premio: premiosGanados[aux]
+                };
+
+                //------------------------------------inicio de fade
+                var fade = setInterval(function () {
+
+                    $("#div1").fadeOut("fast");
+                    $("#div1").fadeIn("slow");
+
+                }, 200); // original 1 segundo
+
+                setTimeout(function(){
+                    clearInterval(fade);
+                    $scope.$apply();
+                    aux ++;
+                },300); //original 10 segundos
+                //------------------------------------fin de fade
+
+
+            }
+
+
+            //Esta funcion busca un nuevo participante, pero con el mismo premio.
+            $scope.ReiniciarPremio = function()
+            {
+                if(ganadores[0] != null)
+                {
+                    personasAusentes.push(participantes[x].cedula );
+
+                    switch(participantes[x].ubicacionID)
+                    {
+                        case 1:
+                            minapreCont --;
+                            break;
+                        case 2:
+                            mipreCont --;
+                            break;
+                        case 3:
+                            barquitaCont --;
+                            break;
+                    }
+                    aux --;
+                    ganadores.pop();
+                    premiosGanados.pop();
+                    $scope.RodarTombola();
+                }
+                else{return;}
+
+            }
+
         }]);
 
     </script>
@@ -253,26 +288,12 @@
 
 
 <style>
-    #background {
-        background-image: url('../../Images/arbol_rojo.jpg');
-        background-repeat: no-repeat;
-        background-size: 65% 1280%;
-    }
-
-    #background_2 {
-        background-image: url('../../Images/389-gold-1366x768-minimalistic-wallpaper.jpg');
-        background-repeat: no-repeat;
-        background-size: 100% 1400%;
-        background-position: right;
-    }
-
     tbody {
-        height: 600px;
-        overflow:auto;
-    }
-    thead > tr, tbody{
-    display:block;
+        height: 700px;
+        overflow: auto;
     }
 
-
+    thead > tr, tbody {
+        display: block;
+    }
 </style>

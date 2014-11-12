@@ -13,12 +13,12 @@ namespace TombolaDigital.Models
         public int participanteID { get; set; }
 
         [Required(ErrorMessage = "El numero de cédula es requerido.")]
-        [StringLength(100, ErrorMessage = "La {0} debe contener {2} números. ", MinimumLength = 11)]
+        [StringLength(100, ErrorMessage = "La {0} debe contener {2} números. ", MinimumLength = 13)]
         [DataType(DataType.Text)]
         [Display(Name = "cédula")]
         public string cedula { get; set; }
         public string nombreParticipante { get; set; }
-        public string apellidoParticipante { get; set; }
+        public string nombreDeLaUbicacion { get; set; }
 
         public int ubicacionID { get; set; }
         [ForeignKey("ubicacionID")]

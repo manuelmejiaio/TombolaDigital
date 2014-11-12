@@ -11,6 +11,7 @@ namespace TombolaDigital.Models
         [Key]
         public int premioID { get; set; }
         public string nombrePremio { get; set; }
-
+        public int grupoDePremio { get; set; }
+        
     }
 }

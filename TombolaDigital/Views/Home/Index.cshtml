@@ -2,7 +2,6 @@
 <div ng-app="TombolaDigital">
     <div ng-controller="MyController">
 
-
         @*-----------------------------------------------------------------------Tabla*@
         <table border="1" style="border:3px solid black; position:absolute; right:50px; width:30%; background-image: url('../../Images/389-gold-1366x768-minimalistic-wallpaper.jpg');">
             <thead>
@@ -15,32 +14,28 @@
                     <td style="width:300px"><h4><b>&nbsp;&nbsp;Ganador</b></h4></td>
                     <td style="width:300px"><h4><b>&nbsp;&nbsp;Cédula</b></h4></td>
                     <td style="width:200px"><h4><b>&nbsp;&nbsp;Premio</b></h4></td>
-                    <td style="width:200px"><h4><b>&nbsp;&nbsp;Ubicacion</b></h4></td>
+                    @*<td style="width:200px"><h4><b>&nbsp;&nbsp;Ubicacion</b></h4></td>*@
                 </tr>
-
                 <tr style="overflow:scroll; height:30px;" ng-repeat="x in ng_arregloForzado | orderBy:'id':true">
                     <td style="width:300px;">
                         @*<p>&nbsp; {{x.ubicacion}}</p>*@
                         <p>&nbsp; {{x.nombre}}</p>
-                        
 
                     </td>
                     <td style="width:300px"> &nbsp; {{x.cedula}} </td>
                     <td style="width:200px"> &nbsp;{{x.premio}}</td>
-                    <td style="width:200px"> &nbsp;{{x.ubicacion}}</td>
+                    @*<td style="width:200px"> &nbsp;{{x.ubicacion}}</td>*@
                 </tr>
             </tbody>
         </table>
-
         @*-----------------------------------------------------------------------Tombolola*@
         <div style=" background-color:white;  position: fixed;top: 45%;left: 22%; height:170px;width:540px; border:2px solid black;border-radius:2em; text-align:center">
             <p style=" position:absolute;font-family:'Lucida Calligraphy' ; font-size:65px;color:#d4d022; text-shadow: -1px 0 black, 0 2px black, 2px 0 black, 0 -1px black; bottom:125%; width:525px "> Rifa Navideña</p>
-            
+
             @*para mostrar el premio en la tombola*@
             <div style="top:-55px; left:55px; position: absolute; height:52px; width:430px; background:white; border: 3px solid black ;border-radius:2em 2em 0em 0em;">
                 <p style="font-size:32px;"> {{ng_PremioRodando}} </p>
             </div>
-
             <div id="div1">
                 <h1 style="font-size:25px;"> {{ng_ParticipantesNombreRodando}} </h1>
                 <h2 style="font-size:50px;"> {{ng_ParticipantesCedulaRodando}}</h2>
@@ -51,13 +46,10 @@
             </div>
         </div>
 
-
     </div>
 </div>
 
-
 @section Scripts {
-
 
     <script>
 
@@ -92,14 +84,17 @@
             var minapreCont = 0;
             var mipreCont = 0;
             var barquitaCont = 0;
-            
+
 
 
             //variable cantidad maxima de premios por ubicacion
-            var barquitaMaxPremios = 10;   
-            var mipreMaxPremios = 31;      
-            var minapreMaxPremios = 112;   
-            
+            var barquitaMaxPremios = 10;
+            var mipreMaxPremios = 31;
+            var minapreMaxPremios = 112;
+
+            //variables de tiempos
+            var tiempoParticipantesAleatorios = 300;
+            var detenerTiempoParticipantesAleatorios = 9000;
 
             // En esta funcion se elige un participante aleatoriamente almacenado en la variables que para luego enviarlo a la funcion Ganador(x)
             $scope.RodarTombola = function()
@@ -114,13 +109,13 @@
                         $scope.ng_ParticipantesCedulaRodando = " ("+ participantes[x].cedula + ")";
                         $scope.ng_PremioRodando =  premios[aux].nombrePremio;
                         $scope.$apply();
-                    }, 300); // original 300 milisegundos
+                    }, tiempoParticipantesAleatorios); // 300 milisegundos
 
 
                     setTimeout(function(){
                         clearInterval(participantesAleatorios);
                         Ganador (x);
-                    },10000); //original 10 segundos
+                    },detenerTiempoParticipantesAleatorios); // 9 segundos
                 }
 
                 else{
@@ -149,14 +144,16 @@
                 {
                     case 1:
                         if(minapreCont == minapreMaxPremios)
-                        { console.log("Han ganado 110 participantes de MINAPRE");
+                        { console.log("Han ganado 112 participantes de MINAPRE");
+                            tiempoParticipantesAleatorios = 150;
+                            detenerTiempoParticipantesAleatorios = 800;
                             $scope.RodarTombola();
                             return;
                         }
                         break;
                     case 2:
                         if(mipreCont == mipreMaxPremios)
-                        { console.log("Han ganado 30 participantes de MIPRE");
+                        { console.log("Han ganado 31 participantes de MIPRE");
                             $scope.RodarTombola();
                             return;
                         }
@@ -210,7 +207,7 @@
                     $scope.$apply();
                     $('a.btn').attr('disabled', false);
                     aux ++;
-                },6000); //original 6 segundos
+                },5000); //original 5 segundos
                 //------------------------------------fin de fade
 
 
@@ -249,7 +246,6 @@
 
     </script>
 }
-
 
 <style>
     tbody {
